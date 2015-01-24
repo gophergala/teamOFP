@@ -25,7 +25,9 @@ import (
 type Context struct {
 	db *sql.DB
 	//airbrake *gobrake.Notifier
-	sqs *sqs.Queue
+	sqs  *sqs.Queue
+	rsqs *sqs.Queue
+	tq   *TrackQueue
 }
 
 type Track struct {
@@ -76,16 +78,28 @@ func main() {
 		log.Panic(err)
 	}
 
+	// Send Queue: API -> Remote
 	q, err := s.GetQueue("spotify-ofp")
 	if err != nil {
 		log.Panic(err)
 	}
-
 	context.sqs = q
 
+	// Receive Queue: Remote -> API
+	qq, err := s.GetQueue("spotify-ofp-notification")
+	if err != nil {
+		log.Panic(err)
+	}
+	context.rsqs = qq
+
+	// Queue Processing Logic
 	messages := make(chan *sqs.Message)
-	go listenOnQueue(context.sqs, messages)
+	go listenOnQueue(context.rsqs, messages)
 	go processQueue(messages)
+
+	// Track
+	tq := &TrackQueue{}
+	context.tq = tq
 
 	router := mux.NewRouter()
 	r := router.PathPrefix("/api/v1").Subrouter() // Prepend API Version
@@ -102,27 +116,28 @@ func main() {
 	//r.HandleFunc("/queue/upvote", AddTrack).Methods("POST")
 	//r.HandleFunc("/queue/downvote", AddTrack).Methods("POST")
 
-	//tq := &TrackQueue{}
 	r.HandleFunc("/search", SearchSpotify).Methods("GET")
 
-	tq := &TrackQueue{}
+	//r.HandleFunc("/push", QueueTrackRemote).Methods("GET")
 
-	trackList := tq.list()
-	log.Println("Track Queue: ", trackList)
+	//tq := &TrackQueue{}
 
-	tq.push("song1")
-	tq.push("song2")
+	//trackList := tq.list()
+	//log.Println("Track Queue: ", trackList)
 
-	trackList = tq.list()
-	log.Println("Track Queue: ", trackList)
+	//tq.push("song1")
+	//tq.push("song2")
 
-	track, _ := tq.pop()
-	log.Println("Track: ", track)
+	//trackList = tq.list()
+	//log.Println("Track Queue: ", trackList)
 
-	trackList = tq.list()
-	log.Println("Track Queue: ", trackList)
+	//track, _ := tq.pop()
+	//log.Println("Track: ", track)
 
-	log.Println("Track Queue Length: ", tq.length())
+	//trackList = tq.list()
+	//log.Println("Track Queue: ", trackList)
+
+	//log.Println("Track Queue Length: ", tq.length())
 
 	// Setup router
 	n.UseHandler(r)
