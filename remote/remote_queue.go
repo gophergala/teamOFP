@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/crowdmob/goamz/sqs"
 )
@@ -53,6 +54,7 @@ func listenOnQueue(queue string, ch chan *sqs.Message) {
 			ch <- &m
 			q.DeleteMessage(&m)
 		}
+		time.Sleep(time.Second)
 	}
 
 }
@@ -63,6 +65,4 @@ func processQueue(ch chan *sqs.Message) {
 	}
 }
 
-func setupQueue(queueName string) {
-
-}
+// func(queue)
