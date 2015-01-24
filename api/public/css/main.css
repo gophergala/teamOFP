@@ -1,5 +1,14 @@
-h1 {
-  text-align: center;
+.header h1 {
+  background-image:     url(/images/groupify.go-logo.png);
+  background-position:  center;
+  background-repeat:    no-repeat;
+  background-size:      500px auto;
+
+  display:      block;
+  height:       100px;
+  margin-top:   10px;
+  text-align:   center;
+  text-indent:  -4000px;
 }
 
 .now-playing h2 {
