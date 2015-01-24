@@ -1,2 +1,3 @@
 api/gin-bin
-api
+api/api
+api/.env
