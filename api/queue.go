@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	//"log"
+	"encoding/json"
 	"net/http"
 )
 
@@ -14,5 +15,6 @@ func PostAddTrack(w http.ResponseWriter, r *http.Request) {
 
 // GetListTracks - Retrieve list of tracks in Track Queue
 func GetListTracks(w http.ResponseWriter, r *http.Request) {
-
+	response, _ := json.Marshal(tracks)
+	w.Write(response)
 }
