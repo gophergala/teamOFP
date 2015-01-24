@@ -1,3 +1,5 @@
+// jm3: docs - https://github.com/jmperez/spotify-web-api-js
+
 var SpotifyWebApi = (function() {
 
   'use strict';
