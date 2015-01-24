@@ -10,6 +10,7 @@ import (
 	//"encoding/json"
 	"fmt"
 	"github.com/codegangsta/negroni"
+	"github.com/crowdmob/goamz/sqs"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -23,6 +24,7 @@ import (
 type Context struct {
 	db *sql.DB
 	//airbrake *gobrake.Notifier
+	sqs *sqs.Queue
 }
 
 var context = &Context{}
@@ -45,6 +47,23 @@ func main() {
 		os.Setenv("SQL_DB", "spotify_remote")
 	}
 
+	// Setup App Context
+	s, err := sqs.NewFrom(os.Getenv("AWS_ACCESS"), os.Getenv("AWS_SECRET"), "us-east-1")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	q, err := s.GetQueue("spotify-ofp")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	context.sqs = q
+
+	messages := make(chan *sqs.Message)
+	go listenOnQueue(context.sqs, messages)
+	go processQueue(messages)
+
 	router := mux.NewRouter()
 	r := router.PathPrefix("/api/v1").Subrouter() // Prepend API Version
 
@@ -60,24 +79,7 @@ func main() {
 	//r.HandleFunc("/queue/upvote", AddTrack).Methods("POST")
 	//r.HandleFunc("/queue/downvote", AddTrack).Methods("POST")
 
-	tq := &TrackQueue{}
-
-	trackList := tq.list()
-	log.Println("Track Queue: ", trackList)
-
-	tq.push("song1")
-	tq.push("song2")
-
-	trackList = tq.list()
-	log.Println("Track Queue: ", trackList)
-
-	track, _ := tq.pop()
-	log.Println("Track: ", track)
-
-	trackList = tq.list()
-	log.Println("Track Queue: ", trackList)
-
-	log.Println("Track Queue Length: ", tq.length())
+	//tq := &TrackQueue{}
 
 	// Setup router
 	n.UseHandler(r)
