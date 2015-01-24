@@ -8,6 +8,7 @@ package main
 import (
 	"database/sql"
 	//"encoding/json"
+	"encoding/json"
 	"fmt"
 	"github.com/codegangsta/negroni"
 	_ "github.com/go-sql-driver/mysql"
@@ -38,6 +39,11 @@ var context = &Context{}
 // GetInfo - Info Endpoint. Returns versioning info.
 func GetInfo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Spotify Remote API v0.1.0")
+}
+
+func SearchSpotify(w http.ResponseWriter, r *http.Request) {
+	response, _ := json.Marshal(tracks)
+	w.Write(response)
 }
 
 var tracks []Track
@@ -76,6 +82,8 @@ func main() {
 	r.HandleFunc("/queue/list", GetListTracks).Methods("GET")
 	//r.HandleFunc("/queue/upvote", AddTrack).Methods("POST")
 	//r.HandleFunc("/queue/downvote", AddTrack).Methods("POST")
+
+	r.HandleFunc("/search", SearchSpotify).Methods("GET")
 
 	tq := &TrackQueue{}
 
