@@ -2,10 +2,6 @@ h1 {
   text-align: center;
 }
 
-h2 {
-  font-size: 140%;
-}
-
 .now-playing h2 {
   text-align: center;
 }
@@ -26,4 +22,29 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
 
 .fpo {
   color: red;
+}
+
+/* jm3 : spotify search test */
+
+.search-box .input-group {
+  margin-bottom: 20px;
+}
+
+.search-box input[type='submit'] {
+  margin-bottom: 20px;
+}
+
+.cover {
+  width:            108px;
+  height:           108px;
+  display:          inline-block;
+  background-size:  cover;
+}
+
+.cover:hover {
+  cursor: pointer;
+}
+
+.cover.playing {
+  border: 5px solid #e45343;
 }
