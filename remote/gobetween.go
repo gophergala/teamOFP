@@ -1,10 +1,11 @@
 package main
 
 import (
-	"flag"
-	"fmt"
 	"log"
-	"os/exec"
+	"os"
+
+	"github.com/crowdmob/goamz/sqs"
+	"github.com/joho/godotenv"
 )
 
 // start of script tag
@@ -29,20 +30,42 @@ var commands = map[string]string{
 
 func createSystemCall(command string, param string) string {
 	return ScriptStart + commands[command] + param
+
 }
 
+// func main() {
+// 	var cmd = flag.String("o", "pause", "Enter the command for spotify")
+// 	flag.Parse()
+//
+// 	command := createSystemCall(*cmd, "")
+//
+// 	if command == "" {
+// 		fmt.Println("exiting...")
+// 	}
+// 	fmt.Println(command)
+// 	out, err := exec.Command("/usr/bin/osascript", "-e", command).Output()
+// 	if err != nil {
+// 		log.Fatal(err)
+// 		log.Fatal(out)
+// 	}
+//
+// }
 func main() {
-	var cmd = flag.String("o", "pause", "Enter the command for spotify")
-	flag.Parse()
+	log.Println("Starting sqs processor")
 
-	command := createSystemCall(*cmd, "")
-	if command == "" {
-		fmt.Println("exiting...")
-	}
-	fmt.Println(command)
-	out, err := exec.Command("/usr/bin/osascript", "-e", command).Output()
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error loading .env file")
 	}
-	fmt.Printf("The output is %s\n", out)
+
+	c.AWSAccess = os.Getenv("aws_access")
+	c.AWSSecret = os.Getenv("aws_secret")
+
+	done := make(chan bool)
+	messageQueue := make(chan *sqs.Message)
+
+	go listenOnQueue("dev", messageQueue)
+	go processQueue(messageQueue)
+
+	<-done
 }
