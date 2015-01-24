@@ -7,7 +7,7 @@
   <title>Groupify</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/main.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+  <!-- script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script -->
   <script src="/javascript/main.js"></script>
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,18 +17,91 @@
   <![endif]-->
 </head>
 <body>
-  <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6">
+
+<div class="container-fluid">
+
+  <div class="header row">
+    <div class="col-md-10 col-md-offset-1">
       <h1>Groupify</h1>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-6">
+  <div class="now-playing row">
+    <div class="col-md-10 col-md-offset-1">
+      <h2>Now playing: <span class="fpo">ARTISTNAME - SONGNAME</span></h2>
+    </div>
+  </div>
+
+  <div class="playback-controls row">
+    <div class="col-md-10 col-md-offset-1">
+      <p class="pull-left secondary-control">
+        <span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-volume-down" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
+      </p>
+
+      <p class="pull-right secondary-control">
+        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+      </p>
+
+      <p class="text-center control">
+        <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+      </p>
+    </div>
+  </div>
+
+  <div class="queue row">
+    <div class="col-md-10 col-md-offset-1">
+    <h2>Coming next:</h2>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <th>#</th>
+            <th>Time</th>
+            <th>Track</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Queued by</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>3:07</td>
+              <td>The Ride</td>
+              <td>David Allan Cole</td>
+              <td>16 Biggest Hits</td>
+              <td>user-10</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>1:20</td>
+              <td>Bookends</td>
+              <td>Simon and Garfunkel</td>
+              <td>Greatest Hits</td>
+              <td>user-05</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>3:28</td>
+              <td>A Woman Left Lonely</td>
+              <td>Janis Joplin</td>
+              <td>The Pearl Sessions</td>
+              <td>user-05</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" class="search-box">
+    <div class="col-md-10 col-md-offset-1">
+      <h2>Queue a new song:</h2>
       <form>
         <div class="form-group">
-          <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+          <label class="sr-only" for="search-for-song-unused">song or artist (unused)</label>
           <div class="input-group">
             <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
             <input type="text" autofocus class="form-control" id="search-input" placeholder="search">
@@ -38,62 +111,7 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-6">
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <th>#</th>
-            <th>Time</th>
-            <th>Track</th>
-            <th>Artist</th>
-            <th>Album</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>3:07</td>
-              <td>The Ride</td>
-              <td>David Allan Cole</td>
-              <td>16 Biggest Hits</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>1:20</td>
-              <td>Bookends</td>
-              <td>Simon and Garfunkel</td>
-              <td>Greatest Hits</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>3:28</td>
-              <td>A Woman Left Lonely</td>
-              <td>Janis Joplin</td>
-              <td>The Pearl Sessions</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6">
-      <p class="pull-left secondary-control">
-        <span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
-        <span class="glyphicon glyphicon-volume-down" aria-hidden="true"></span>
-        <span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-      </p>
-      <p class="pull-right secondary-control">
-        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-      </p>
-      <p class="text-center control">
-        <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-        <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-      </p>
-    </div>
-  </div>
 </div>
+
 </body>
 </html>

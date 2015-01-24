@@ -1,3 +1,15 @@
+h1 {
+  text-align: center;
+}
+
+h2 {
+  font-size: 140%;
+}
+
+.now-playing h2 {
+  text-align: center;
+}
+
 span.glyphicon-play {
   font-size: 4em;
 }
@@ -7,7 +19,11 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
 }
 
 .secondary-control {
-  margin-top: 40px;
-  font-size: 1.2em;
-  padding: 0 25px;
+  margin-top:  40px;
+  font-size:   1.2em;
+  padding:     0 25px;
+}
+
+.fpo {
+  color: red;
 }
