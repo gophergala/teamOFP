@@ -10,6 +10,15 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
   (function tick() {
     $http.get('/api/v1/queue/list')
     .then(function(res){
+
+      // sum time to play up to each track in collection
+      var sum = 0;
+      for(var i = 0; i < res.data.length; i++) {
+        track = res.data[i];
+        sum += parseInt(track.time);
+        track.time_to_play = sum;
+      }
+
       $scope.queue = res.data;
       $timeout(tick, 1000);
     });
@@ -38,5 +47,21 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
     .then(function(res){
       console.log("Enqueued track " + track.name);
     });
+  };
+});
+
+Groupify.filter('secondsToTime', function() {
+  // shameless copy/paste
+  // http://codeaid.net/javascript/convert-seconds-to-hours-minutes-and-seconds-(javascript)
+  return function(secs) {
+    var hr = Math.floor(secs / 3600);
+    var min = Math.floor((secs - (hr * 3600))/60);
+    var sec = secs - (hr * 3600) - (min * 60);
+
+    if (hr < 10) { hr = "0" + hr; }
+    if (min < 10) { min = "0" + min;}
+    if (sec < 10) { sec = "0" + sec;}
+    if (hr) { hr = "00"; }
+    return hr + ':' + min + ':' + sec;
   };
 });

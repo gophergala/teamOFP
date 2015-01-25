@@ -55,7 +55,7 @@
         <table class="table table-hover">
           <thead>
             <th>#</th>
-            <th>Time</th>
+            <th>Time to Play</th>
             <th>Track</th>
             <th>Artist</th>
             <th>Album</th>
@@ -64,7 +64,7 @@
           <tbody>
             <tr ng-repeat="track in queue">
               <td>{{ $index + 1 }}</td>
-              <td>{{ track.time }}</td>
+              <td>{{ track.time_to_play | secondsToTime }}</td>
               <td>{{ track.name }}</td>
               <td>{{ track.artist }}</td>
               <td>{{ track.album }}</td>
