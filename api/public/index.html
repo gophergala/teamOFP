@@ -25,8 +25,12 @@
     <div class="col-md-10 col-md-offset-1">
       <h2>Now playing:
         <span class="fpo">
-          {{ current_track.artist }} - {{ current_track.name }}
-          (<timer interval="1000" countdown="current_track.time_remaiming">{{minutes}}:{{sseconds}}</timer>)
+          {{ current_track.name }}
+          by
+          {{ current_track.artist }}
+          <small><b>[{{ current_track.time_remaining }}s&nbsp;remaining]</b></small>
+          <!-- @m: not sure if this was working before, but I'm just getting NaN:NaN now - jm3 -->
+          (<timer interval="1000" countdown="current_track.time_remaining">{{minutes}}:{{seconds}}</timer>)
         </span>
       </h2>
     </div>
@@ -59,7 +63,7 @@
             <th>Track</th>
             <th>Artist</th>
             <th>Album</th>
-            <!-- th>Queued by</th-->
+            <th>Queued by</th>
           </thead>
           <tbody>
             <tr ng-repeat="track in queue">
