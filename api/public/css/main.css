@@ -58,6 +58,6 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
   border: 5px solid #e45343;
 }
 
-.volume, .hell-ban {
+.volume {
   display: none;
 }
