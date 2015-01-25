@@ -14,6 +14,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/oauth2"
 	"log"
 	"net/http"
 	"os"
@@ -24,10 +25,11 @@ import (
 type Context struct {
 	db *sqlx.DB
 	//airbrake *gobrake.Notifier
-	sqs  *sqs.Queue
-	rsqs *sqs.Queue
-	tq   *TrackQueue
-	np   *nowPlaying
+	sqs   *sqs.Queue
+	rsqs  *sqs.Queue
+	tq    *TrackQueue
+	np    *nowPlaying
+	oauth *oauth2.Config
 }
 
 var context = &Context{}
@@ -125,6 +127,9 @@ func main() {
 	//r.HandleFunc("/queue/downvote", AddTrack).Methods("POST")
 
 	r.HandleFunc("/search", SearchSpotify).Methods("GET")
+
+	r.HandleFunc("/auth", Auth).Methods("GET")
+	r.HandleFunc("/callback", Callback).Methods("GET")
 
 	//r.HandleFunc("/push", QueueTrackRemote).Methods("GET")
 
