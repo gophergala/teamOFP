@@ -89,6 +89,10 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
   border: 5px solid #e45343;
 }
 
+.queue tbody tr:hover {
+  cursor: pointer;
+}
+
 .queue .avatar {
   height: 32px;
   width: 32px;
