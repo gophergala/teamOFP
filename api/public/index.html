@@ -90,7 +90,7 @@
     <form id="search-form" ng-submit="search()">
       <div class="input-group">
         <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-        <input type="text" id="query" ng-model="query" autofocus class="form-control" placeholder="Type an Artist Name"/>
+        <input type="text" id="query" ng-model="query" autofocus class="form-control" placeholder="Type a song name"/>
       </div>
       <input type="submit" id="search" class="btn btn-primary" value="Search" />
     </form>
@@ -99,7 +99,7 @@
       <div ng-repeat="track in trackResults">
         <div ng-click="enqueue(track)" class="search-result">
           <img ng-src="{{ track.album.images[0].url }}" class="cover"/>
-          <span>{{ track.artists[0].name }} - {{ track.name }}</span>
+          <span><b>{{ track.artists[0].name }}</b> - {{ track.name }}</span>
         </div>
     </div>
   </div>
