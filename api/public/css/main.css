@@ -3,6 +3,10 @@ img { display: inline; }
 
 /* main */
 
+th.artist_column {
+  min-width: 200px;
+}
+
 .header h1 {
   background-image:     url(/images/groupify.go-logo.png);
   background-position:  center;

@@ -24,11 +24,16 @@
   <div class="now-playing row" ng-show="current_track.name">
     <div class="col-md-10 col-md-offset-1">
       <h2>Now playing:
+
+        <img ng-src="{{ current_track.album_art }}" class="cover"/>
+
         <span class="fpo">
           {{ current_track.name }}
           by
           {{ current_track.artist }}
+          <!--
           <small><b>[{{ current_track.time_remaining | secondsToMinutes }}]</b></small>
+          -->
         </span>
       </h2>
     </div>
@@ -59,7 +64,7 @@
             <th>#</th>
             <th>Time to Play</th>
             <th>Track</th>
-            <th>Artist</th>
+            <th class="artist_column">Artist</th>
             <th>Album</th>
             <th>Queued by</th>
           </thead>
