@@ -3,6 +3,18 @@ img { display: inline; }
 
 /* main */
 
+th.artist_column {
+  min-width: 200px;
+}
+
+.artist_name {
+  font-weight: bold;
+}
+
+.track_name {
+  font-weight: bold;
+}
+
 .header h1 {
   background-image:     url(/images/groupify.go-logo.png);
   background-position:  center;
@@ -75,6 +87,10 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
 
 .cover.playing {
   border: 5px solid #e45343;
+}
+
+.queue tbody tr:hover {
+  cursor: pointer;
 }
 
 .queue .avatar {
