@@ -26,6 +26,22 @@ func queueNextTrack() error {
 	return nil
 }
 
+// queueTrackRemote - Queues a track remotely
+func queueTrackRemote(track string) {
+
+	m := remoteCommand{
+		Command: "play_track",
+		Param:   track,
+	}
+
+	err := pushMessage(context.sqs, m)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	log.Println("Track Queued: ", track)
+}
+
 // PostAddTrack - Add track to Track Queue
 // Format (JSON): {"<track_id>"}
 func PostAddTrack(w http.ResponseWriter, r *http.Request) {
@@ -65,18 +81,22 @@ func GetListTracks(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
-// queueTrackRemote - Queues a track remotely
-func queueTrackRemote(track string) {
+// DeleteTrack - Delete a track from the Track Queue
+func PostDeleteTrack(w http.ResponseWriter, r *http.Request) {
 
-	m := remoteCommand{
-		Command: "play_track",
-		Param:   track,
-	}
+	reqData := map[string]string{}
 
-	err := pushMessage(context.sqs, m)
+	// Parse JSON Data
+	dec := json.NewDecoder(r.Body)
+	err := dec.Decode(&reqData)
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 
-	log.Println("Track Queued: ", track)
+	t := reqData["track_id"]
+
+	context.tq.remove(t)
+
+	w.WriteHeader(204)
+	w.Write([]byte(`{"status":"deleted", "track":"` + t + `"}`))
 }
