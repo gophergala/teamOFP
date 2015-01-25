@@ -122,3 +122,10 @@ func PostDeleteTrack(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(204)
 	w.Write([]byte(`{"status":"deleted", "track":"` + t + `"}`))
 }
+
+// SkipTrack - Send next track to remote
+func PostSkipTrack(w http.ResponseWriter, r *http.Request) {
+
+	queueNextTrack()
+	w.Write([]byte(`{"status":"track skipped"}`))
+}

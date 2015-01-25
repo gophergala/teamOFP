@@ -34,7 +34,7 @@ func (t *TrackQueue) pop() (Track, error) {
 
 	track := Track{}
 
-	err := context.db.Get(&track, "SELECT min(id) FROM track_queue;")
+	err := context.db.Get(&track, "SELECT track_id, name, artist, album, album_art, time FROM track_queue ORDER BY id DESC LIMIT 1;")
 	if err != nil {
 		log.Panic(err)
 	}

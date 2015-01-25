@@ -120,6 +120,7 @@ func main() {
 	r.HandleFunc("/queue/add", PostAddTrack).Methods("POST")
 	r.HandleFunc("/queue/list", GetListTracks).Methods("GET")
 	r.HandleFunc("/queue/delete", PostDeleteTrack).Methods("POST")
+	r.HandleFunc("/queue/next", PostSkipTrack).Methods("POST")
 	//r.HandleFunc("/queue/upvote", AddTrack).Methods("POST")
 	//r.HandleFunc("/queue/downvote", AddTrack).Methods("POST")
 
