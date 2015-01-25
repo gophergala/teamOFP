@@ -1,5 +1,8 @@
 /* overrides */
-img { display: inline; }
+img {
+  display: inline;
+  max-width: inherit;
+}
 
 /* main */
 
