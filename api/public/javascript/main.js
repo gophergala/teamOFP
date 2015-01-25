@@ -19,7 +19,7 @@ Groupify.controller('MainCtrl', function($scope, $http) {
 
   $scope.enqueue = function(track){
     $http.post('/api/v1/queue/add', {
-      trackId: track.id
+      track_id: track.id
     })
     .then(function(res){
       console.log("Enqueued track " + track.name);
