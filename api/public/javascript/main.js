@@ -1,11 +1,11 @@
-var Groupify = angular.module('Groupify', []);
+var Groupify = angular.module('Groupify', ['timer']);
 
 Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
   var spotifyApi = new SpotifyWebApi();
   $scope.queue = [];
   $scope.query = "";
   $scope.trackResults = [];
-
+  $scope.current_track = { artist: "Marisa Monte", name: "Barulhinho Bom", time_remaiming: 97 };
 
   (function tick() {
     $http.get('/api/v1/queue/list')
@@ -39,5 +39,4 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
       console.log("Enqueued track " + track.name);
     });
   };
-
 });
