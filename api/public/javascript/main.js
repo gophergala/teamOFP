@@ -1,11 +1,10 @@
-var Groupify = angular.module('Groupify', ['timer']);
+var Groupify = angular.module('Groupify', []);
 
 Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
   var spotifyApi = new SpotifyWebApi();
   $scope.queue = [];
   $scope.query = "";
   $scope.trackResults = [];
-  //$scope.current_track = { artist: "Marisa Monte", name: "Barulhinho Bom", time_remaining: 97 };
 
   (function tick() {
     $http.get('/api/v1/queue/list')
@@ -14,9 +13,10 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
       // sum time to play up to each track in collection
       var sum = 0;
 
-      $scope.current_track = res.data.now_playing.track;
-      if ($scope.current_track && res.data.now_playing.time_remaining) { 
-        sum = $scope.current_track.time_remaining = parseInt( res.data.now_playing.time_remaining );
+      track = res.data.now_playing.track;
+      if (track && res.data.now_playing.time_remaining) {
+        sum = track.time_remaining = parseInt(res.data.now_playing.time_remaining);
+        $scope.current_track = track;
       }
 
       $scope.queue = res.data.queue;
@@ -33,7 +33,7 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
   $scope.next = function(){
     $http.post('/api/v1/queue/next')
     .then(function(res){
-      console.log("skipping to next track ");
+      console.log("skipping to next track");
     });
   };
 
@@ -80,3 +80,13 @@ Groupify.filter('secondsToTime', function() {
   };
 });
 
+Groupify.filter('secondsToMinutes', function() {
+  return function(secs) {
+    var min = Math.floor(secs / 60);
+    var sec = secs - (min * 60);
+
+    if (min < 10) { min = "0" + min;}
+    if (sec < 10) { sec = "0" + sec;}
+    return min + ':' + sec;
+  };
+});
