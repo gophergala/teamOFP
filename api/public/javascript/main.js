@@ -1,15 +1,19 @@
 var Groupify = angular.module('Groupify', []);
 
-Groupify.controller('MainCtrl', function($scope, $http) {
+Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
   var spotifyApi = new SpotifyWebApi();
   $scope.queue = [];
   $scope.query = "";
   $scope.trackResults = [];
 
-  $http.get('/api/v1/queue/list')
-  .then(function(res){
-    $scope.queue = res.data;
-  });
+
+  (function tick() {
+    $http.get('/api/v1/queue/list')
+    .then(function(res){
+      $scope.queue = res.data;
+      $timeout(tick, 1000);
+    });
+  })();
 
   $scope.search = function(){
     spotifyApi.searchTracks($scope.query, {limit: 10, offset: 0}, function(err, data) {
