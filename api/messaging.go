@@ -2,14 +2,16 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/crowdmob/goamz/sqs"
 	"log"
 	"strconv"
+
+	"github.com/crowdmob/goamz/sqs"
 )
 
 type NotificationMessage struct {
 	Event string `json:"event"`
 	Value string `json:"values"`
+	Track string `json:"track"`
 }
 
 func listenOnQueue(q *sqs.Queue, ch chan *sqs.Message) {
