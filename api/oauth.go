@@ -46,9 +46,6 @@ func getRedirectURL() string {
 }
 
 func createUser(token string) (string, error) {
-	// TODO:
-	// - Get github user ID
-	// - Store in DB
 
 	url := strings.Join([]string{"https://api.github.com/user?", "access_token=", token}, "")
 	resp, err := http.Get(url)
@@ -65,14 +62,29 @@ func createUser(token string) (string, error) {
 	}
 
 	// Insert into DB
+	ghUserInt := int(ghUser["id"].(float64))
+	ghUserStr := strconv.Itoa(ghUserInt)
 
-	log.Println("User: ", ghUser)
+	user := User{}
+	user.UserID = ghUserStr
+	user.AvatarURL = ghUser["avatar_url"].(string)
+	user.AccessToken = token
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
 
-	userID := int(ghUser["id"].(float64))
+	_, err = context.db.NamedExec("INSERT OR REPLACE INTO user_table (user_id, access_token, avatar_url, created_at, updated_at) VALUES (:user_id, :access_token, :avatar_url, :created_at, :updated_at)", &user)
 
-	id := strconv.Itoa(userID)
+	//_, err = context.db.Exec(`INSERT INTO user_table (user_id, access_token) VALUES ("aaaa","asdkjasldjas")`)
 
-	return id, nil
+	if err != nil {
+		log.Panic(err)
+	}
+	var id int
+	_ = context.db.Get(&id, "SELECT id FROM user_table WHERE user_id = ?", ghUserStr)
+
+	strid := strconv.Itoa(id)
+
+	return strid, nil
 }
 
 // Auth - Endpoint
@@ -80,7 +92,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	initOauth2()
 	url := getRedirectURL()
 
-	http.Redirect(w, r, url, http.StatusUnauthorized)
+	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 // Callback - Endpoint
@@ -110,5 +122,5 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	// Save it.
 	session.Save(r, w)
 
-	http.Redirect(w, r, "/", http.StatusAccepted)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
