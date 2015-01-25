@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	//"fmt"
 	"log"
 	"net/http"
 )
@@ -12,17 +12,56 @@ type remoteCommand struct {
 	Param   string `json:"param"`
 }
 
+type response struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+}
+
+func queueNextTrack() error {
+	// Received track ended, so send next track from track queue
+
+	nextTrack, _ := context.tq.pop()
+	queueTrackRemote(nextTrack.Id)
+
+	return nil
+}
+
 // PostAddTrack - Add track to Track Queue
 // Format (JSON): {"<track_id>"}
 func PostAddTrack(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "140 Proof Persona API v0.1.0")
 
-	context.tq.push("track123")
+	reqData := map[string]string{}
+
+	// Parse JSON Data
+	dec := json.NewDecoder(r.Body)
+	err := dec.Decode(&reqData)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Get track details
+	t := getTrackDetails(reqData["track_id"])
+
+	context.tq.push(*t)
+
+	resp := response{
+		Status:  "success",
+		Message: "Track Added to Queue: " + t.Id,
+	}
+
+	jresp, _ := json.Marshal(resp)
+
+	w.Write(jresp)
 }
 
 // GetListTracks - Retrieve list of tracks in Track Queue
 func GetListTracks(w http.ResponseWriter, r *http.Request) {
-	response, _ := json.Marshal(tracks)
+	response, _ := json.Marshal(context.tq.list())
+
+	w.Header().Set("Content-Type", "application/json")
+	if len(response) == 0 {
+		response = []byte("{}")
+	}
 	w.Write(response)
 }
 

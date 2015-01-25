@@ -30,33 +30,27 @@ type Context struct {
 	tq   *TrackQueue
 }
 
-type Track struct {
-	Id     string `json:"id"`
-	Time   string `json:"time"`
-	Name   string `json:"name"`
-	Artist string `json:"artist"`
-	Album  string `json:"album"`
-}
-
 var context = &Context{}
 
 // GetInfo - Info Endpoint. Returns versioning info.
 func GetInfo(w http.ResponseWriter, r *http.Request) {
+
+	getTrackDetails("0eGsygTp906u18L0Oimnem")
 	fmt.Fprintf(w, "Spotify Remote API v0.1.0")
 }
 
 func SearchSpotify(w http.ResponseWriter, r *http.Request) {
-	response, _ := json.Marshal(tracks)
+	response, _ := json.Marshal(context.tq.list())
 	w.Write(response)
 }
 
-var tracks []Track
+//var tracks []Track
 
 func init() {
-	s1 := Track{Time: "3:07", Name: "The Ride", Artist: "David Allan Cole", Album: "16 Biggest Hits"}
-	s2 := Track{Time: "1:20", Name: "Bookends", Artist: "Simon and Garfunkel", Album: "Greatest Hits"}
-	s3 := Track{Time: "3:28", Name: "A Woman Left Lonely", Artist: "Janis Joplin", Album: "The Pearl Sessions"}
-	tracks = []Track{s1, s2, s3}
+	//s1 := Track{Time: "3:07", Name: "The Ride", Artist: "David Allan Cole", Album: "16 Biggest Hits"}
+	//s2 := Track{Time: "1:20", Name: "Bookends", Artist: "Simon and Garfunkel", Album: "Greatest Hits"}
+	//s3 := Track{Time: "3:28", Name: "A Woman Left Lonely", Artist: "Janis Joplin", Album: "The Pearl Sessions"}
+	//tracks = []Track{s1, s2, s3}
 }
 
 func main() {

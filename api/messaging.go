@@ -39,18 +39,19 @@ func processQueue(ch chan *sqs.Message) {
 		switch n.Event {
 		case "track_end":
 			log.Println("Song Ended")
-			// TODO:
-			// - Get next song from queue
-			// - Push to remote
+			queueNextTrack()
 
 		case "track_start":
-			log.Println("Song Started")
+			log.Println("Track Started: ", n.Value)
 
-		case "player_pause":
+		case "player_paused":
 			log.Println("Player Paused")
 
-		case "player_start":
-			log.Println("Player Start")
+		case "player_playing":
+			log.Println("Player Playing")
+
+		case "player_stopped":
+			log.Println("Player Stopped")
 
 		case "time_left":
 			log.Println("Time Left: ", n.Value)
