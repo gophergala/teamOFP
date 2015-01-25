@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/crowdmob/goamz/sqs"
 	"log"
 	"strconv"
+
+	"github.com/crowdmob/goamz/sqs"
 )
 
 type NotificationMessage struct {
