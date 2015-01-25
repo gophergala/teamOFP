@@ -70,10 +70,12 @@
               <td>{{ track.name }}</td>
               <td>{{ track.artist }}</td>
               <td>{{ track.album }}</td>
-              <td>{{ track.user }}</td>
-              <td ng-click="dequeue(track)">
+              <td>
+                <img class="avatar" src="https://pbs.twimg.com/profile_images/2326478065/gc08u4d8g5001rynnof8_normal.png" />
+                {{ track.user }}</td>
+              <!--td ng-click="dequeue(track)">
                 <span class="glyphicon glyphicon-remove-circle"></span>
-              </td>
+              </td-->
             </tr>
           </tbody>
         </table>
@@ -88,16 +90,16 @@
     <form id="search-form" ng-submit="search()">
       <div class="input-group">
         <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-        <input type="text" id="query" ng-model="query" autofocus class="form-control" placeholder="Type an Artist Name"/>
+        <input type="text" id="query" ng-model="query" autofocus class="form-control" placeholder="Type a song name"/>
       </div>
       <input type="submit" id="search" class="btn btn-primary" value="Search" />
     </form>
 
     <div id="results">
       <div ng-repeat="track in trackResults">
-        <div ng-click="enqueue(track)">
+        <div ng-click="enqueue(track)" class="search-result">
           <img ng-src="{{ track.album.images[0].url }}" class="cover"/>
-          <div>{{ track.artists[0].name }} - {{ track.name }}</div>
+          <span><b>{{ track.artists[0].name }}</b> - {{ track.name }}</span>
         </div>
     </div>
   </div>
