@@ -22,9 +22,11 @@ type TrackQueue struct {
 func (t *TrackQueue) push(track Track) (int, error) {
 	log.Println("Track pushed to track queue: ", track.Name)
 
-	// TODO:
-	// - Get track details from Spotify API
-
+	for _, v := range t.tracks {
+		if v.Id == track.Id {
+			return len(t.tracks), nil
+		}
+	}
 	t.tracks = append(t.tracks, track)
 
 	return len(t.tracks), nil
@@ -45,4 +47,13 @@ func (t *TrackQueue) list() []Track {
 
 func (t *TrackQueue) length() int {
 	return len(t.tracks)
+}
+
+func (t *TrackQueue) remove(ID string) {
+
+	for i, v := range t.tracks {
+		if v.Id == ID {
+			t.tracks = append(t.tracks[:i], t.tracks[i+1:]...)
+		}
+	}
 }
