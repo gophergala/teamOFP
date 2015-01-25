@@ -27,14 +27,12 @@
 
         <img ng-src="{{ current_track.album_art }}" class="cover"/>
 
-        <span class="fpo">
-          {{ current_track.name }}
+          <span class="track_name">{{ current_track.name }}</span>
           by
-          {{ current_track.artist }}
+          <span class="artist_name">{{ current_track.artist }}</span>
           <!--
           <small><b>[{{ current_track.time_remaining | secondsToMinutes }}]</b></small>
           -->
-        </span>
       </h2>
     </div>
   </div>

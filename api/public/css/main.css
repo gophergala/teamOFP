@@ -7,6 +7,14 @@ th.artist_column {
   min-width: 200px;
 }
 
+.artist_name {
+  font-weight: bold;
+}
+
+.track_name {
+  font-weight: bold;
+}
+
 .header h1 {
   background-image:     url(/images/groupify.go-logo.png);
   background-position:  center;
