@@ -17,7 +17,6 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
       $scope.current_track = res.data.now_playing.track;
       if ($scope.current_track && res.data.now_playing.time_remaining) { 
         sum = $scope.current_track.time_remaining = parseInt( res.data.now_playing.time_remaining );
-        //console.log( "time remaining: " + $scope.current_track.time_remaining + "s" );
       }
 
       $scope.queue = res.data.queue;
@@ -30,6 +29,13 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
       $timeout(tick, 1000);
     });
   })();
+
+  $scope.next = function(){
+    $http.post('/api/v1/queue/next')
+    .then(function(res){
+      console.log("skipping to next track ");
+    });
+  };
 
   $scope.search = function(){
     spotifyApi.searchTracks($scope.query, {limit: 10, offset: 0}, function(err, data) {
