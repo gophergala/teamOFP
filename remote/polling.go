@@ -39,6 +39,21 @@ func polling(queue *sqs.Queue) {
 			playerState = currentPlayerState
 			// log.Println("player state changed: ", currentPlayerState)
 		}
+		if currentTrack != track {
+			if !getNextSong {
+				pushMessage(queue, NotificationMessage{"track_ending", track, currentTrack})
+				pushMessage(queue, NotificationMessage{"track_start", nextTrack, nextTrack})
+				getNextSong = true
+				nextTrack := getNextTrack()
+				if nextTrack != "" {
+					setCurrentTrack(nextTrack)
+					track = nextTrack
+				} else {
+					track = currentTrack
+				}
+				setNextTrack("")
+			}
+		}
 		//check player duration - is track over
 		if currentTimeLeft != timeLeft {
 			// log.Println("New Time : ", currentTimeLeft)
@@ -47,20 +62,9 @@ func polling(queue *sqs.Queue) {
 			pushMessage(queue, message)
 			if timeLeft < 30 && getNextSong { //lock out period
 				getNextSong = false
-				message := NotificationMessage{"track_end", track, currentTrack}
+				message := NotificationMessage{"get_next_track", track, currentTrack}
 				pushMessage(queue, message)
 			}
-		}
-
-		if currentTrack != track {
-			if !getNextSong {
-				message := NotificationMessage{"track_start", nextTrack, nextTrack}
-				pushMessage(queue, message)
-			}
-			getNextSong = true
-			nextTrack := getNextTrack()
-			setCurrentTrack(nextTrack)
-			track = currentTrack
 		}
 
 	}

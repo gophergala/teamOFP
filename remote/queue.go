@@ -54,14 +54,17 @@ func processQueue(ch chan *sqs.Message) {
 		if err != nil {
 			log.Panic("the unmarshall plan")
 		}
-		if messagebody["command"] == "play_track" {
+		switch messagebody["command"] {
+		case "play_track":
 			if str, ok := messagebody["param"].(string); ok {
 				setNextTrack("spotify:track:" + str)
 			} else {
 				log.Panic("was unable to set current track")
 			}
+			// case "skip_track"
+			// case "other command"
+		} //end of switch
 
-		}
 	}
 }
 
