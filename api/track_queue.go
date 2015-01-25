@@ -36,14 +36,19 @@ func (t *TrackQueue) pop() (Track, error) {
 
 	err := context.db.Get(&track, "SELECT track_id, name, artist, album, album_art, time FROM track_queue ORDER BY id DESC LIMIT 1;")
 	if err != nil {
-		log.Panic(err)
+		if err.Error() == "sql: no rows in result set" {
+			// No tracks left in the queue
+		} else {
+			log.Panic(err)
+		}
 	}
 
-	context.db.Exec("DELETE FROM track_queue WHERE track_id = ?", track.Id)
-
-	log.Println("Track popped from track queue: ", track)
-
+	if track.Id != "" {
+		context.db.Exec("DELETE FROM track_queue WHERE track_id = ?", track.Id)
+		log.Println("Track popped from track queue: ", track)
+	}
 	return track, nil
+
 }
 
 func (t *TrackQueue) list() []Track {

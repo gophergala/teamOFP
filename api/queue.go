@@ -49,9 +49,11 @@ func queueTrackRemote(track string) {
 
 func updateNowPlayingTrack(ID string) {
 
-	t := getTrackDetails(ID)
+	if ID != "" {
+		t := getTrackDetails(ID)
 
-	context.np.current = *t
+		context.np.current = *t
+	}
 }
 
 func updateNowPlayingTime(time int) {
