@@ -10,6 +10,7 @@ import (
 type NotificationMessage struct {
 	Event string `json:"event"`
 	Value string `json:"values"`
+	Track string `json:"track,omitempty"`
 }
 
 func listenOnQueue(q *sqs.Queue, ch chan *sqs.Message) {
@@ -59,6 +60,9 @@ func processQueue(ch chan *sqs.Message) {
 			log.Println("Time Left: ", n.Value)
 			time, _ := strconv.Atoi(n.Value)
 			updateNowPlayingTime(time)
+			if n.Track != "" {
+				updateNowPlayingTrack(n.Track)
+			}
 
 		}
 	}
