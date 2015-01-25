@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -44,7 +45,7 @@ func getRedirectURL() string {
 	return url
 }
 
-func createUser(token string) error {
+func createUser(token string) (string, error) {
 	// TODO:
 	// - Get github user ID
 	// - Store in DB
@@ -63,9 +64,15 @@ func createUser(token string) error {
 		log.Panic(err)
 	}
 
+	// Insert into DB
+
 	log.Println("User: ", ghUser)
 
-	return nil
+	userID := int(ghUser["id"].(float64))
+
+	id := strconv.Itoa(userID)
+
+	return id, nil
 }
 
 // Auth - Endpoint
@@ -90,6 +97,18 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Token: ", tok)
 
-	createUser(tok.AccessToken)
+	id, _ := createUser(tok.AccessToken)
+
+	// Create session
+	session, _ := store.Get(r, "groupify")
+
+	log.Println("Saving into session: ", id)
+
+	// Set some session values.
+	session.Values["userID"] = id
+
+	// Save it.
+	session.Save(r, w)
+
 	http.Redirect(w, r, "/", http.StatusAccepted)
 }

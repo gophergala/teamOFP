@@ -11,6 +11,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/crowdmob/goamz/sqs"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
@@ -33,6 +34,7 @@ type Context struct {
 }
 
 var context = &Context{}
+var store = sessions.NewCookieStore([]byte("Groupify.go FTW!"))
 
 // GetInfo - Info Endpoint. Returns versioning info.
 func GetInfo(w http.ResponseWriter, r *http.Request) {
