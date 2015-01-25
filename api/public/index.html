@@ -63,7 +63,7 @@
             <th>Track</th>
             <th>Artist</th>
             <th>Album</th>
-            <th>Queued by</th>
+            <!-- th>Queued by</th-->
           </thead>
           <tbody>
             <tr ng-repeat="track in queue">
@@ -73,6 +73,9 @@
               <td>{{ track.artist }}</td>
               <td>{{ track.album }}</td>
               <td>{{ track.user }}</td>
+              <td ng-click="dequeue(track)">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -83,7 +86,7 @@
   <div class="search-box row">
     <div class="col-md-10 col-md-offset-1">
     <h2>Queue a new song:</h2>
-    <p>Type an artist name and click on "Search". Then, click on any album from the results to play 30 seconds of its first track.</p>
+    <p>Type a song name and click "Search".</p>
     <form id="search-form" ng-submit="search()">
       <div class="input-group">
         <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
@@ -91,11 +94,13 @@
       </div>
       <input type="submit" id="search" class="btn btn-primary" value="Search" />
     </form>
+
     <div id="results">
-      <div ng-repeat="track in trackResults" ng-click="enqueue(track)">
-        <img ng-src="{{ track.album.images[0].url }}" class="cover"/>
-        <div>{{ track.artists[0].name }} - {{ track.name }}</div>
-      </div>
+      <div ng-repeat="track in trackResults">
+        <div ng-click="enqueue(track)">
+          <img ng-src="{{ track.album.images[0].url }}" class="cover"/>
+          <div>{{ track.artists[0].name }} - {{ track.name }}</div>
+        </div>
     </div>
   </div>
 </div>

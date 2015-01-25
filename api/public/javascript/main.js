@@ -21,6 +21,16 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
     });
   };
 
+  $scope.dequeue = function(track){
+    $http.post('/api/v1/queue/delete', {
+      track_id: track.id
+    })
+    .then(function(res){
+      // FIXME: handle errors
+      console.log("de-queued track " + track.name);
+    });
+  };
+
   $scope.enqueue = function(track){
     $http.post('/api/v1/queue/add', {
       track_id: track.id
@@ -29,4 +39,5 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
       console.log("Enqueued track " + track.name);
     });
   };
+
 });
