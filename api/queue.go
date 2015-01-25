@@ -25,7 +25,14 @@ type nowPlaying struct {
 func queueNextTrack() error {
 	// Received track ended, so send next track from track queue
 
-	nextTrack, _ := context.tq.pop()
+	context.tq.pop()
+	//queueTrackRemote(nextTrack.Id)
+
+	return nil
+}
+
+func peekNextTrack() error {
+	nextTrack, _ := context.tq.peek()
 	queueTrackRemote(nextTrack.Id)
 
 	return nil

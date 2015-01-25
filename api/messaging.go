@@ -43,11 +43,16 @@ func processQueue(ch chan *sqs.Message) {
 		switch n.Event {
 		case "track_end":
 			log.Println("Song Ended")
-			queueNextTrack()
+			//queueNextTrack()
+
+		case "get_next_track":
+			log.Println("Getting ready to play next track")
+			peekNextTrack()
 
 		case "track_start":
 			log.Println("Track Started: ", n.Value)
 			if n.Track != "" {
+				queueNextTrack()
 				log.Println("n.Track: ", n.Track)
 				n.Track = strings.Split(n.Track, ":")[2]
 				updateNowPlayingTrack(n.Track)
@@ -66,6 +71,7 @@ func processQueue(ch chan *sqs.Message) {
 			time, _ := strconv.Atoi(n.Value)
 			updateNowPlayingTime(time)
 			if n.Track != "" {
+				log.Println("Time Left: ", n)
 				n.Track = strings.Split(n.Track, ":")[2]
 				updateNowPlayingTrack(n.Track)
 			}
