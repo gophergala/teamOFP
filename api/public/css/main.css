@@ -57,3 +57,7 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
 .cover.playing {
   border: 5px solid #e45343;
 }
+
+.volume, .hell-ban {
+  display: none;
+}
