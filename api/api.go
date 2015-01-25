@@ -6,15 +6,14 @@
 package main
 
 import (
-	"database/sql"
-	//"encoding/json"
 	"encoding/json"
 	"fmt"
 	"github.com/codegangsta/negroni"
 	"github.com/crowdmob/goamz/sqs"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
+	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
 	"os"
@@ -23,7 +22,7 @@ import (
 
 // App context
 type Context struct {
-	db *sql.DB
+	db *sqlx.DB
 	//airbrake *gobrake.Notifier
 	sqs  *sqs.Queue
 	rsqs *sqs.Queue
@@ -68,6 +67,15 @@ func main() {
 	}
 
 	// Setup App Context
+	// Setup DB
+	db, err := sqlx.Open("sqlite3", "./spotify-remote.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	context.db = db
+
+	// Setup SQS
 	s, err := sqs.NewFrom(os.Getenv("AWS_ACCESS"), os.Getenv("AWS_SECRET"), "us-east-1")
 	if err != nil {
 		log.Panic(err)

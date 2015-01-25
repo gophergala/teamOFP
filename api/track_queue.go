@@ -6,12 +6,12 @@ import (
 )
 
 type Track struct {
-	Id       string `json:"id"`
-	Time     string `json:"time"`
-	Name     string `json:"name"`
-	Artist   string `json:"artist"`
-	Album    string `json:"album"`
-	AlbumArt string `json:"album_art"`
+	Id       string `json:"id" db:"track_id"`
+	Time     string `json:"time" db:"time"`
+	Name     string `json:"name" db:"name"`
+	Artist   string `json:"artist" db:"artist"`
+	Album    string `json:"album" db:"album"`
+	AlbumArt string `json:"album_art" db:"album_art"`
 }
 
 type TrackQueue struct {
@@ -22,19 +22,24 @@ type TrackQueue struct {
 func (t *TrackQueue) push(track Track) (int, error) {
 	log.Println("Track pushed to track queue: ", track.Name)
 
-	for _, v := range t.tracks {
-		if v.Id == track.Id {
-			return len(t.tracks), nil
-		}
-	}
-	t.tracks = append(t.tracks, track)
+	_, err := context.db.NamedExec("INSERT INTO track_queue (track_id, time, name, artist, album, album_art) VALUES (:track_id, :time, :name, :artist, :album, :album_art)", &track)
 
-	return len(t.tracks), nil
+	if err != nil {
+		return 0, err
+	}
+	return t.length(), nil
 }
 
 func (t *TrackQueue) pop() (Track, error) {
-	track := t.tracks[0]
-	t.tracks = t.tracks[1:]
+
+	track := Track{}
+
+	err := context.db.Get(&track, "SELECT min(id) FROM track_queue;")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	context.db.Exec("DELETE FROM track_queue WHERE track_id = ?", track.Id)
 
 	log.Println("Track popped from track queue: ", track)
 
@@ -42,18 +47,27 @@ func (t *TrackQueue) pop() (Track, error) {
 }
 
 func (t *TrackQueue) list() []Track {
-	return t.tracks
+	tq := []Track{}
+
+	err := context.db.Select(&tq, "SELECT track_id, name, artist, album, album_art, time FROM track_queue")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return tq
 }
 
 func (t *TrackQueue) length() int {
-	return len(t.tracks)
+	var count int
+	err := context.db.Get(&count, "SELECT count(*) FROM track_queue")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return count
 }
 
 func (t *TrackQueue) remove(ID string) {
 
-	for i, v := range t.tracks {
-		if v.Id == ID {
-			t.tracks = append(t.tracks[:i], t.tracks[i+1:]...)
-		}
-	}
+	context.db.Exec("DELETE FROM track_queue WHERE track_id = ?", ID)
 }
