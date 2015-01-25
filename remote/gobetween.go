@@ -75,8 +75,6 @@ func main() {
 
 	c.AWSAccess = os.Getenv("AWS_ACCESS")
 	c.AWSSecret = os.Getenv("AWS_SECRET")
-	log.Println(c.AWSAccess)
-	log.Println(c.AWSSecret)
 	done := make(chan bool)
 	messageQueue := make(chan *sqs.Message)
 
