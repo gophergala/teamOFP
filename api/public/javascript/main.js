@@ -22,7 +22,7 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
         track.time_to_play = sum;
       }
 
-      $scope.queue = res.data;
+      $scope.queue = res.data.queue;
       $timeout(tick, 1000);
     });
   })();
