@@ -17,6 +17,11 @@ type response struct {
 	Message string `json:"message"`
 }
 
+type nowPlaying struct {
+	current       Track `json:"current"`
+	timeRemaining int   `json:"time_running"`
+}
+
 func queueNextTrack() error {
 	// Received track ended, so send next track from track queue
 
@@ -40,6 +45,17 @@ func queueTrackRemote(track string) {
 	}
 
 	log.Println("Track Queued: ", track)
+}
+
+func updateNowPlayingTrack(ID string) {
+
+	t := getTrackDetails(ID)
+
+	context.np.current = *t
+}
+
+func updateNowPlayingTime(time int) {
+	context.np.timeRemaining = time
 }
 
 // PostAddTrack - Add track to Track Queue
@@ -72,13 +88,19 @@ func PostAddTrack(w http.ResponseWriter, r *http.Request) {
 
 // GetListTracks - Retrieve list of tracks in Track Queue
 func GetListTracks(w http.ResponseWriter, r *http.Request) {
-	response, _ := json.Marshal(context.tq.list())
+	response := make(map[string]interface{})
+	queuedTracks := context.tq.list()
+
+	response["queue"] = queuedTracks
+	response["now_playing"] = map[string]interface{}{
+		"track":          context.np.current,
+		"time_remaining": context.np.timeRemaining,
+	}
+
+	jresponse, _ := json.Marshal(response)
 
 	w.Header().Set("Content-Type", "application/json")
-	if len(response) == 0 {
-		response = []byte("{}")
-	}
-	w.Write(response)
+	w.Write(jresponse)
 }
 
 // DeleteTrack - Delete a track from the Track Queue

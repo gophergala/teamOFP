@@ -28,6 +28,7 @@ type Context struct {
 	sqs  *sqs.Queue
 	rsqs *sqs.Queue
 	tq   *TrackQueue
+	np   *nowPlaying
 }
 
 var context = &Context{}
@@ -91,9 +92,12 @@ func main() {
 	go listenOnQueue(context.rsqs, messages)
 	go processQueue(messages)
 
-	// Track
+	// Track Queue
 	tq := &TrackQueue{}
 	context.tq = tq
+
+	// Now Playing
+	context.np = &nowPlaying{}
 
 	router := mux.NewRouter()
 	r := router.PathPrefix("/api/v1").Subrouter() // Prepend API Version

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/crowdmob/goamz/sqs"
 	"log"
+	"strconv"
 )
 
 type NotificationMessage struct {
@@ -43,6 +44,7 @@ func processQueue(ch chan *sqs.Message) {
 
 		case "track_start":
 			log.Println("Track Started: ", n.Value)
+			updateNowPlayingTrack(n.Value)
 
 		case "player_paused":
 			log.Println("Player Paused")
@@ -55,6 +57,8 @@ func processQueue(ch chan *sqs.Message) {
 
 		case "time_left":
 			log.Println("Time Left: ", n.Value)
+			time, _ := strconv.Atoi(n.Value)
+			updateNowPlayingTime(time)
 
 		}
 	}
