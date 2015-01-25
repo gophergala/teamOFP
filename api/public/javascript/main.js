@@ -13,6 +13,9 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
 
       // sum time to play up to each track in collection
       var sum = 0;
+
+      if ($scope.current_track) { sum += parseInt($scope.current_track.time_remaiming); }
+
       for(var i = 0; i < res.data.length; i++) {
         track = res.data[i];
         sum += parseInt(track.time);
