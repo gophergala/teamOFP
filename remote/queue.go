@@ -3,8 +3,6 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"strconv"
-	"time"
 
 	"github.com/crowdmob/goamz/sqs"
 )
@@ -58,60 +56,12 @@ func processQueue(ch chan *sqs.Message) {
 		}
 		if messagebody["command"] == "play_track" {
 			if str, ok := messagebody["param"].(string); ok {
-				setNextTrack(str)
+				setNextTrack("spotify:track:" + str)
 			} else {
 				log.Panic("was unable to set current track")
 			}
 
 		}
-	}
-}
-
-func pollSystem(queue *sqs.Queue) {
-	playerState := getPlayerState()
-	track := getCurrentTrackID()
-	timeLeft := int(getTimeLeft())
-	getNextSong := true
-	// log.Println("starting player state: ", playerState)
-	for {
-		time.Sleep(time.Second / 2)
-		//check player state
-		currentPlayerState := getPlayerState()
-		currentTimeLeft := int(getTimeLeft())
-		currentTrack := getCurrentTrackID()
-		if playerState != currentPlayerState {
-			message := NotificationMessage{"player_" + currentPlayerState, "", currentTrack}
-			err := pushMessage(queue, message)
-			if err != nil {
-				log.Println(err)
-			}
-			playerState = currentPlayerState
-			log.Println("player state changed: ", currentPlayerState)
-		}
-		//check player duration - is track over
-		if currentTimeLeft != timeLeft {
-			// log.Println("New Time : ", currentTimeLeft)
-			timeLeft = currentTimeLeft
-			message := NotificationMessage{"time_left", strconv.Itoa(timeLeft), currentTrack}
-			pushMessage(queue, message)
-			if timeLeft < 30 && getNextSong { //lock out period
-				getNextSong = false
-				message := NotificationMessage{"track_end", track, currentTrack}
-				pushMessage(queue, message)
-			}
-		}
-
-		if currentTrack != track {
-			if !getNextSong {
-				message := NotificationMessage{"track_start", nextTrack, nextTrack}
-				pushMessage(queue, message)
-			}
-			getNextSong = true
-			nextTrack := getNextTrack()
-			setCurrentTrack("spotify:track:" + nextTrack)
-			track = currentTrack
-		}
-
 	}
 }
 

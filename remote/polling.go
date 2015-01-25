@@ -16,13 +16,20 @@ func polling(queue *sqs.Queue) {
 	track := getCurrentTrackID()
 	timeLeft := int(getTimeLeft())
 	getNextSong := true
+	//inner for loop variables
+	var (
+		currentPlayerState string
+		currentTimeLeft    int
+		currentTrack       string
+	)
 	// log.Println("starting player state: ", playerState)
 	for {
 		time.Sleep(sleepTime)
 		//check player state
-		currentPlayerState := getPlayerState()
-		currentTimeLeft := int(getTimeLeft())
-		currentTrack := getCurrentTrackID()
+		currentPlayerState = getPlayerState()
+		currentTimeLeft = int(getTimeLeft())
+		currentTrack = getCurrentTrackID()
+		// log.Println(currentTrack)
 		if playerState != currentPlayerState {
 			message := NotificationMessage{"player_" + currentPlayerState, "", currentTrack}
 			err := pushMessage(queue, message)
@@ -52,7 +59,7 @@ func polling(queue *sqs.Queue) {
 			}
 			getNextSong = true
 			nextTrack := getNextTrack()
-			setCurrentTrack("spotify:track:" + nextTrack)
+			setCurrentTrack(nextTrack)
 			track = currentTrack
 		}
 

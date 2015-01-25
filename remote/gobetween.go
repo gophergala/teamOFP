@@ -90,6 +90,6 @@ func main() {
 
 	go listenOnQueue("spotify-ofp", messageQueue)
 	go processQueue(messageQueue)
-	go pollSystem(q)
+	go polling(q)
 	<-done
 }
