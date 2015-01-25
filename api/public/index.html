@@ -70,10 +70,12 @@
               <td>{{ track.name }}</td>
               <td>{{ track.artist }}</td>
               <td>{{ track.album }}</td>
-              <td>{{ track.user }}</td>
-              <td ng-click="dequeue(track)">
+              <td>
+                <img class="avatar" src="https://pbs.twimg.com/profile_images/2326478065/gc08u4d8g5001rynnof8_normal.png" />
+                {{ track.user }}</td>
+              <!--td ng-click="dequeue(track)">
                 <span class="glyphicon glyphicon-remove-circle"></span>
-              </td>
+              </td-->
             </tr>
           </tbody>
         </table>

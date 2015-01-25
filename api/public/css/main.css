@@ -58,6 +58,11 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
   border: 5px solid #e45343;
 }
 
-.volume {
+.queue .avatar {
+  height: 32px;
+  width: 32px;
+}
+
+.volume , .playback-controls {
   display: none;
 }
