@@ -53,6 +53,7 @@ func updateNowPlayingTrack(ID string) {
 		t := getTrackDetails(ID)
 
 		context.np.current = *t
+		log.Println("Updated Now Playing: ", t.Id)
 	}
 }
 

@@ -34,7 +34,7 @@ func (t *TrackQueue) pop() (Track, error) {
 
 	track := Track{}
 
-	err := context.db.Get(&track, "SELECT track_id, name, artist, album, album_art, time FROM track_queue ORDER BY id DESC LIMIT 1;")
+	err := context.db.Get(&track, "SELECT track_id, name, artist, album, album_art, time FROM track_queue ORDER BY id ASC LIMIT 1;")
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {
 			// No tracks left in the queue

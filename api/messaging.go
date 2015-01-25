@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/crowdmob/goamz/sqs"
 )
@@ -46,7 +47,11 @@ func processQueue(ch chan *sqs.Message) {
 
 		case "track_start":
 			log.Println("Track Started: ", n.Value)
-			updateNowPlayingTrack(n.Value)
+			if n.Track != "" {
+				log.Println("n.Track: ", n.Track)
+				n.Track = strings.Split(n.Track, ":")[2]
+				updateNowPlayingTrack(n.Track)
+			}
 
 		case "player_paused":
 			log.Println("Player Paused")
@@ -58,10 +63,10 @@ func processQueue(ch chan *sqs.Message) {
 			log.Println("Player Stopped")
 
 		case "time_left":
-			log.Println("Time Left: ", n.Value)
 			time, _ := strconv.Atoi(n.Value)
 			updateNowPlayingTime(time)
 			if n.Track != "" {
+				n.Track = strings.Split(n.Track, ":")[2]
 				updateNowPlayingTrack(n.Track)
 			}
 
