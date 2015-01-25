@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/crowdmob/goamz/sqs"
 	"github.com/joho/godotenv"
@@ -13,10 +14,9 @@ import (
 const ScriptStart = "tell application \"Spotify\" to "
 
 var commands = map[string]string{
-	"state":      "state",
+	"state":      "player state",
 	"play":       "play",
 	"pause":      "pause",
-	"stop":       "stop",
 	"duration":   "duration of current track",
 	"name":       "name of current track",
 	"album":      "album of current track",
@@ -32,20 +32,22 @@ var commands = map[string]string{
 
 func systemCall(command string, param string) string {
 	fullcmd := ScriptStart + commands[command] + param
+
 	out, err := exec.Command("/usr/bin/osascript", "-e", fullcmd).Output()
 	if err != nil {
 		log.Fatal(err)
 		log.Fatal(out)
 	}
-	return string(out)
+	return strings.TrimSpace(string(out))
 }
 
 //command line processing
 // func main() {
+//
 // 	var cmd = flag.String("o", "pause", "Enter the command for spotify")
 // 	flag.Parse()
 //
-// 	command := createSystemCall(*cmd, "")
+// 	command := systemCall(*cmd, "\"spotify:track:7p54iuWHqvdeN224OglZ9t\"")
 //
 // 	if command == "" {
 // 		fmt.Println("exiting...")
@@ -56,8 +58,14 @@ func systemCall(command string, param string) string {
 // 		log.Fatal(err)
 // 		log.Fatal(out)
 // 	}
+// done := make(chan bool)
 //
+// fmt.Println(getTimeLeft())
+// go pollSystem()
+// <-done
 // }
+
+//
 func main() {
 	log.Println("Starting sqs processor")
 
@@ -73,8 +81,18 @@ func main() {
 	done := make(chan bool)
 	messageQueue := make(chan *sqs.Message)
 
+	//notification queue
+	s, err := sqs.NewFrom(c.AWSAccess, c.AWSSecret, "us-east-1")
+	if err != nil {
+		log.Panic(err)
+	}
+	q, err := s.GetQueue("spotify-ofp-notification")
+	if err != nil {
+		log.Panic(err)
+	}
+
 	go listenOnQueue("spotify-ofp", messageQueue)
 	go processQueue(messageQueue)
-
+	go pollSystem(q)
 	<-done
 }

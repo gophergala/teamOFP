@@ -5,9 +5,11 @@ import (
 	"strconv"
 )
 
-func getTimeLeft() int {
-	duration, derr := strconv.Atoi(systemCall("duration", ""))
-	position, perr := strconv.Atoi(systemCall("position", ""))
+var nextTrack string
+
+func getTimeLeft() float32 {
+	duration, derr := strconv.ParseFloat(systemCall("duration", ""), 64)
+	position, perr := strconv.ParseFloat(systemCall("position", ""), 64)
 
 	if derr != nil {
 		log.Panic(derr)
@@ -17,5 +19,29 @@ func getTimeLeft() int {
 		log.Panic(perr)
 	}
 
-	return duration - position
+	return float32(duration - position)
+}
+
+func getPlayerState() string {
+	return systemCall("state", "")
+}
+
+func getCurrentTrack() string {
+	return systemCall("name", "")
+}
+
+func getCurrentTrackID() string {
+	return systemCall("id", "")
+}
+
+func setCurrentTrack(id string) {
+	systemCall("play_track", "\""+id+"\"")
+}
+
+func getNextTrack() string {
+	return nextTrack
+}
+
+func setNextTrack(track string) {
+	nextTrack = track
 }
