@@ -54,7 +54,10 @@ func processQueue(ch chan *sqs.Message) {
 			if n.Track != "" {
 				queueNextTrack()
 				log.Println("n.Track: ", n.Track)
-				n.Track = strings.Split(n.Track, ":")[2]
+				splitString := strings.Split(n.Track, ":")
+				if len(splitString) > 1 {
+					n.Track = splitString[2]
+				}
 				updateNowPlayingTrack(n.Track)
 			}
 
