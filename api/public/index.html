@@ -97,9 +97,9 @@
 
     <div id="results">
       <div ng-repeat="track in trackResults">
-        <div ng-click="enqueue(track)">
+        <div ng-click="enqueue(track)" class="search-result">
           <img ng-src="{{ track.album.images[0].url }}" class="cover"/>
-          <div>{{ track.artists[0].name }} - {{ track.name }}</div>
+          <span>{{ track.artists[0].name }} - {{ track.name }}</span>
         </div>
     </div>
   </div>
