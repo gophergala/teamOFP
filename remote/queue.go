@@ -3,28 +3,11 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/crowdmob/goamz/sqs"
 )
-
-// 	log.Println("Starting sqs processor")
-//
-// 	err := godotenv.Load()
-// 	if err != nil {
-// 		log.Fatal("Error loading .env file")
-// 	}
-//
-// 	c.AWSAccess = os.Getenv("aws_access")
-// 	c.AWSSecret = os.Getenv("aws_secret")
-//
-// 	done := make(chan bool)
-// 	messageQueue := make(chan *sqs.Message)
-//
-// 	go listenOnQueue("dev", messageQueue)
-// 	go processQueue(messageQueue)
-//
-// 	<-done
 
 //NotificationMessage simple struct for sending data
 type NotificationMessage struct {
@@ -66,7 +49,7 @@ func listenOnQueue(queue string, ch chan *sqs.Message) {
 
 func processQueue(ch chan *sqs.Message) {
 	for m := range ch {
-		log.Println("Processing Message: ", m)
+		// log.Println("Processing Message: ", m)
 		messagebody := map[string]interface{}{}
 		err := json.Unmarshal([]byte(m.Body), &messagebody)
 		if err != nil {
@@ -76,24 +59,19 @@ func processQueue(ch chan *sqs.Message) {
 			if str, ok := messagebody["param"].(string); ok {
 				setNextTrack(str)
 			} else {
-				log.Println("was unable to set current track")
+				log.Panic("was unable to set current track")
 			}
 
 		}
 	}
 }
 
-//
-// func waitForEvents(queue string, wrchan chan){
-//
-// }
-
 func pollSystem(queue *sqs.Queue) {
 	playerState := getPlayerState()
 	track := getCurrentTrackID()
 	timeLeft := int(getTimeLeft())
 	getNextSong := true
-	log.Println("starting player state: ", playerState)
+	// log.Println("starting player state: ", playerState)
 	for {
 		time.Sleep(time.Second / 2)
 		//check player state
@@ -111,10 +89,10 @@ func pollSystem(queue *sqs.Queue) {
 		}
 		//check player duration - is track over
 		if currentTimeLeft != timeLeft {
-			log.Println("New Time : ", currentTimeLeft)
+			// log.Println("New Time : ", currentTimeLeft)
 			timeLeft = currentTimeLeft
-			// message := NotificationMessage{"time_left", strconv.Itoa(timeLeft)}
-			// pushMessage(queue, message)
+			message := NotificationMessage{"time_left", strconv.Itoa(timeLeft)}
+			pushMessage(queue, message)
 			if timeLeft < 30 && getNextSong { //lock out period
 				getNextSong = false
 				message := NotificationMessage{"track_end", track}
@@ -130,13 +108,6 @@ func pollSystem(queue *sqs.Queue) {
 			getNextSong = true
 			nextTrack := getNextTrack()
 			setCurrentTrack("spotify:track:" + nextTrack)
-
-			// if (new song)
-			//   log.Println("choose new song")
-			//   log.Println("track start")
-			// else
-			//   log ("no new song")
-			//   log "send whatever spotify picked back to ofp"
 			track = currentTrack
 		}
 
@@ -144,7 +115,7 @@ func pollSystem(queue *sqs.Queue) {
 }
 
 func pushMessage(q *sqs.Queue, message interface{}) error {
-	log.Println("message: ", message)
+	// log.Println("message: ", message)
 	j, err := json.Marshal(message)
 	if err != nil {
 		return err

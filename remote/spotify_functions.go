@@ -8,8 +8,8 @@ import (
 var nextTrack string
 
 func getTimeLeft() float32 {
-	duration, derr := strconv.ParseFloat(systemCall("duration", ""), 64)
-	position, perr := strconv.ParseFloat(systemCall("position", ""), 64)
+	duration, derr := strconv.ParseFloat(callSpotify("duration", ""), 64)
+	position, perr := strconv.ParseFloat(callSpotify("position", ""), 64)
 
 	if derr != nil {
 		log.Panic(derr)
@@ -23,19 +23,19 @@ func getTimeLeft() float32 {
 }
 
 func getPlayerState() string {
-	return systemCall("state", "")
+	return callSpotify("state", "")
 }
 
 func getCurrentTrack() string {
-	return systemCall("name", "")
+	return callSpotify("name", "")
 }
 
 func getCurrentTrackID() string {
-	return systemCall("id", "")
+	return callSpotify("id", "")
 }
 
 func setCurrentTrack(id string) {
-	systemCall("play_track", "\""+id+"\"")
+	callSpotify("play_track", "\""+id+"\"")
 }
 
 func getNextTrack() string {

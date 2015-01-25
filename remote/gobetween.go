@@ -30,7 +30,7 @@ var commands = map[string]string{
 	"position":   "player position",
 }
 
-func systemCall(command string, param string) string {
+func callSpotify(command string, param string) string {
 	fullcmd := ScriptStart + commands[command] + param
 
 	out, err := exec.Command("/usr/bin/osascript", "-e", fullcmd).Output()
@@ -47,7 +47,7 @@ func systemCall(command string, param string) string {
 // 	var cmd = flag.String("o", "pause", "Enter the command for spotify")
 // 	flag.Parse()
 //
-// 	command := systemCall(*cmd, "\"spotify:track:7p54iuWHqvdeN224OglZ9t\"")
+// 	command := callSpotify(*cmd, "\"spotify:track:7p54iuWHqvdeN224OglZ9t\"")
 //
 // 	if command == "" {
 // 		fmt.Println("exiting...")
@@ -65,7 +65,6 @@ func systemCall(command string, param string) string {
 // <-done
 // }
 
-//
 func main() {
 	log.Println("Starting sqs processor")
 
