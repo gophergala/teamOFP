@@ -5,6 +5,7 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
   $scope.queue = [];
   $scope.query = "";
   $scope.trackResults = [];
+  backup_avatar = "http://www.140proof.com/images/logos/140-proof-logo-shadow-500px.png";
 
   (function tick() {
     $http.get('/api/v1/queue/list')
@@ -15,7 +16,9 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
 
       track = res.data.now_playing.track;
       if (track && res.data.now_playing.time_remaining) {
-        track.queued_by_avatar = "https://avatars3.githubusercontent.com/u/12213?v=3&s=460"; // FIXME: replace with ali's new hotness
+        if( ! track.queued_by_avatar )
+          track.queued_by_avatar = backup_avatar;
+        console.log( "currently playing queued by avatar: " + track.queued_by_avatar );
         sum = track.time_remaining = parseInt(res.data.now_playing.time_remaining);
         $scope.current_track = track;
       }
@@ -24,9 +27,8 @@ Groupify.controller('MainCtrl', function($scope, $http, $timeout) {
       for(var i = 0; i < $scope.queue.length; i++) {
         track = $scope.queue[i];
         track.time_to_play = sum;
-
-        track.queued_by_avatar = "https://avatars2.githubusercontent.com/u/2230183?v=3&s=460"; // FIXME: replace with ali's new hotness
-
+        if( ! track.queued_by_avatar )
+          track.queued_by_avatar = backup_avatar;
         sum += parseInt(track.time);
         console.log( track );
       }
