@@ -1,5 +1,8 @@
 /* overrides */
-img { display: inline; }
+img {
+  display: inline;
+  max-width: inherit;
+}
 
 /* main */
 
@@ -15,21 +18,49 @@ th.artist_column {
   font-weight: bold;
 }
 
-.header h1 {
-  background-image:     url(/images/groupify.go-logo.png);
-  background-position:  center;
-  background-repeat:    no-repeat;
-  background-size:      400px auto;
 
-  display:      block;
-  height:       100px;
-  margin-top:   10px;
-  text-align:   center;
-  text-indent:  -4000px;
+.now-playing .container {
+  position: relative;
+  height: 128px;
+  margin-top: 10px;
 }
 
-.now-playing h2 {
-  text-align: center;
+
+.now-playing img.logo {
+  position:     absolute;
+  width:       300px;
+
+  top: 0;
+  left:0;
+}
+
+.now-playing .rightside {
+  width: 600px;
+  position: absolute;
+  top: 0;
+  left: 360px;
+
+}
+.now-playing .container h2 {
+  /*text-align: center;*/
+  position: absolute;
+  top: 0;
+  left:0px;
+  width: 60px;
+}
+.container img.cover{
+  position: absolute;
+  top: 0;
+  left: 0px;
+  width: 128px;
+  height: 128px;
+}
+
+.container .meta-name {
+  position: absolute;
+  top: 0;
+  width: 360px;
+  left: 140px;
 }
 
 h2 {
@@ -92,10 +123,19 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
 .queue tbody tr:hover {
   cursor: pointer;
 }
-
-.queue .avatar {
+.queue tbody .artwork img {
   height: 32px;
   width: 32px;
+}
+.queue tbody td.artwork {
+  padding-top: 4px;
+}
+
+.avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  border: 2px solid #888;
 }
 
 .volume , .playback-controls {
