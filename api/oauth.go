@@ -45,7 +45,7 @@ func getRedirectURL() string {
 	return url
 }
 
-func createUser(token string) (string, error) {
+func createUser(token string) (map[string]string, error) {
 
 	url := strings.Join([]string{"https://api.github.com/user?", "access_token=", token}, "")
 	resp, err := http.Get(url)
@@ -82,9 +82,16 @@ func createUser(token string) (string, error) {
 	var id int
 	_ = context.db.Get(&id, "SELECT id FROM user_table WHERE user_id = ?", ghUserStr)
 
-	strid := strconv.Itoa(id)
+	log.Println("Git User: ", ghUser)
 
-	return strid, nil
+	strid := strconv.Itoa(id)
+	us := map[string]string{
+		"userid":      strid,
+		"github_user": ghUser["login"].(string),
+		"avatar_url":  ghUser["avatar_url"].(string),
+	}
+
+	return us, nil
 }
 
 // Auth - Endpoint
@@ -109,15 +116,15 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Token: ", tok)
 
-	id, _ := createUser(tok.AccessToken)
+	us, _ := createUser(tok.AccessToken)
 
 	// Create session
 	session, _ := store.Get(r, "groupify")
 
-	log.Println("Saving into session: ", id)
-
 	// Set some session values.
-	session.Values["userID"] = id
+	session.Values["userID"] = us["userid"]
+	session.Values["github_user"] = us["github_user"]
+	session.Values["avatar_url"] = us["avatar_url"]
 
 	// Save it.
 	session.Save(r, w)

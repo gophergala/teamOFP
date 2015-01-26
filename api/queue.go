@@ -5,6 +5,7 @@ import (
 	//"fmt"
 	"log"
 	"net/http"
+	//"strconv"
 )
 
 type remoteCommand struct {
@@ -84,8 +85,24 @@ func PostAddTrack(w http.ResponseWriter, r *http.Request) {
 	// Get track details
 	t := getTrackDetails(reqData["track_id"])
 
+	// Add user details
+	session, _ := store.Get(r, "groupify")
+
+	// Retrieve User Details from DB
+
+	//us := UserSummary{
+	//UserID:    session.Values["github_user"].(string),
+	//AvatarURL: session.Values["avatar_url"].(string),
+	//}
+
+	//log.Println("User Summary: ", us)
+
+	t.QueuedBy = session.Values["github_user"].(string)
+	t.QueuedByAvatar = session.Values["avatar_url"].(string)
+	log.Println("Queueing Track: ", t)
 	context.tq.push(*t)
 
+	log.Println("Session Values: ", session.Values)
 	resp := response{
 		Status:  "success",
 		Message: "Track Added to Queue: " + t.Id,
