@@ -131,9 +131,11 @@ span.glyphicon-step-forward, span.glyphicon-step-backward {
   padding-top: 4px;
 }
 
-.queue .avatar {
+.avatar {
   height: 32px;
   width: 32px;
+  border-radius: 32px;
+  border: 2px solid #888;
 }
 
 .volume , .playback-controls {

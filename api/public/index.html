@@ -24,7 +24,9 @@
 
             <img ng-src="{{ current_track.album_art }}" class="cover"/>
             <div class="meta-name">
-              <div class="">Now Playing:</div>
+              <div class="is-playing">
+                <img class="avatar" ng-src="{{ current_track.queued_by_avatar }}" /> is subjecting you to:
+              </div>
               <div class="track_name">{{ current_track.name }}</div>
               <div class="artist_name">{{ current_track.artist }}</div>
             </div>
@@ -76,7 +78,7 @@
               <td>{{ track.artist }}</td>
               <td>{{ track.album }}</td>
               <td>
-                <img class="avatar" src="https://pbs.twimg.com/profile_images/2326478065/gc08u4d8g5001rynnof8_normal.png" />
+                <img class="avatar" ng-src="{{ track.queued_by_avatar }}" />
                 {{ track.user }}</td>
               <!--td ng-click="dequeue(track)">
                 <span class="glyphicon glyphicon-remove-circle"></span>
