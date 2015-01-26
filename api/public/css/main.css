@@ -10,12 +10,8 @@ th.artist_column {
   min-width: 200px;
 }
 
-.artist_name {
-  font-weight: bold;
-}
-
-.track_name {
-  font-weight: bold;
+.artist_name, .track_name {
+  font-size: 200%;
 }
 
 
