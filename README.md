@@ -1,16 +1,20 @@
-# teamOFP
+# Groupify!
 
-## Components
+![logo](https://raw.githubusercontent.com/gophergala/teamOFP/master/api/public/images/groupify.go-logo.png?token=AAAvtebSJotkBbqi-NJzbuKhTsC0ueFmks5Uzsd9wA%3D%3D)
+
+## The social jukebox for your team, powered by Go!
+
+### Components
 
 * Remote - Spotify.app control app (run locally)
 * API - Portal (manages queue, controls Remote)
 * Amazon SQS - Messaging between Portal and Remote
 
-## Getting started
+### Getting started
 
-### Remote
+#### Remote
 
-#### Build & Run
+##### Build & Run
 
 1. `go get` - Install required packages
 1. `go build` - Build binary
@@ -22,9 +26,9 @@ ACCESS_KEY=XXXXXXXXXXX
 ACCESS_SECRET=XXXXXXXXXXXXXXX
 ```
 
-### API
+#### API
 
-#### Build & Run
+##### Build & Run
 
 1. `go get` - Install required packages
 1. `go build` - Build binary
